@@ -1,0 +1,391 @@
+/* ============================================================
+   VARIABLE SYSTEM (DARK / LIGHT LIQUID GLASS)
+   ============================================================ */
+:root {
+  --bg-field: #060a08;
+  --bg-radial: radial-gradient(circle at 50% 20%, #0d1712 0%, #040705 100%);
+  --ink: #f0f4f2;
+  --muted: #94a39b;
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-strong: rgba(14, 22, 18, 0.75);
+  --accent: #8ee0b7;
+  --gold: #f0c377;
+  --line: rgba(255, 255, 255, 0.12);
+  --blob1: #1f4f38;
+  --blob2: #6e4b1a;
+  --blob3: #162f3e;
+  --chat-bg: rgba(10, 15, 12, 0.88);
+  box-sizing: border-box;
+}
+
+html[data-theme="light"] {
+  --bg-field: #f4f1ea;
+  --bg-radial: radial-gradient(circle at 50% 20%, #fbf9f4 0%, #e8e2d4 100%);
+  --ink: #1a241f;
+  --muted: #5e6d65;
+  --glass: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(0, 0, 0, 0.12);
+  --glass-strong: rgba(255, 255, 255, 0.88);
+  --accent: #1e7a4f;
+  --gold: #bd8124;
+  --line: rgba(0, 0, 0, 0.1);
+  --blob1: #c5edd8;
+  --blob2: #f7e3ba;
+  --blob3: #cae3f2;
+  --chat-bg: rgba(248, 246, 240, 0.92);
+}
+
+*, *::before, *::after { box-sizing: inherit; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* CHUYỂN MÀU TỪ TỪ CỰC MƯỢT (0.6s) */
+body, .card, .field, .pill-btn, .icon-row a, .chat-panel, .chat-toggle, .theme-toggle, input, button {
+  transition: background 0.6s ease, color 0.6s ease, border-color 0.6s ease, box-shadow 0.6s ease;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--bg-field);
+  font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   NÚT CHUYỂN THEME SÁNG / TỐI
+   ============================================================ */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 22px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 100px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.theme-toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
+.theme-toggle .track {
+  width: 36px;
+  height: 20px;
+  border-radius: 100px;
+  background: var(--line);
+  position: relative;
+}
+
+.theme-toggle .knob {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--gold);
+  transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.6s ease;
+}
+
+html[data-theme="light"] .theme-toggle .knob {
+  left: 18px;
+  background: var(--accent);
+}
+
+.theme-toggle .theme-label { font-size: 12px; color: var(--muted); font-weight: 600; }
+
+/* ============================================================
+   LOADER & PHÔNG NỀN ĐỘNG (LIQUID BLOBS)
+   ============================================================ */
+body.is-loading .hero-inner, body.is-loading .wrap { opacity: 0; transform: translateY(18px); }
+body.is-ready .hero-inner, body.is-ready .wrap { opacity: 1; transform: translateY(0); transition: opacity .8s ease, transform .8s ease; }
+
+.site-loader {
+  position: fixed; inset: 0; z-index: 999;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  background: var(--bg-field); transition: opacity .5s ease, visibility .5s ease;
+}
+body.is-ready .site-loader { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.loader-ring {
+  width: 50px; height: 50px; border-radius: 50%;
+  border: 3px solid var(--line); border-top-color: var(--accent);
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.field {
+  position: fixed; inset: 0; z-index: -2; overflow: hidden;
+  background: var(--bg-radial);
+}
+
+.field::before, .field::after, .blob3 {
+  content: ""; position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.6;
+  animation: drift 22s ease-in-out infinite alternate;
+}
+.field::before { width: 55vw; height: 55vw; background: var(--blob1); top: -10vw; left: -10vw; }
+.field::after { width: 48vw; height: 48vw; background: var(--blob2); bottom: -12vw; right: -8vw; animation-duration: 26s; }
+.blob3 { width: 40vw; height: 40vw; background: var(--blob3); top: 35%; left: 45%; animation-duration: 18s; }
+@keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(5vw, 4vw) scale(1.1); } }
+
+/* ============================================================
+   HERO & BỐ CỤC HỒ SƠ
+   ============================================================ */
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+.profile-content {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+.profile-content.is-open {
+  max-height: 5000px;
+  opacity: 1;
+}
+
+.hero {
+  position: relative; min-height: 100vh; min-height: 100dvh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 80px 24px 60px;
+}
+
+.eyebrow { color: var(--accent); font-size: 13px; margin: 0 0 12px; letter-spacing: .15em; text-transform: uppercase; font-weight: 700; }
+.hero h1 { font-size: clamp(38px, 8vw, 80px); font-weight: 900; letter-spacing: -0.04em; margin: 0 0 8px; line-height: 1.05; }
+.hero .role { font-size: 18px; color: var(--muted); font-weight: 600; margin: 0 0 32px; }
+
+/* NÚT XEM HỒ SƠ (LIQUID GLASS) */
+.pill-btn {
+  display: inline-block; padding: 13px 34px; font-size: 14.5px; font-weight: 700;
+  color: var(--ink); border-radius: 100px; background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: inset 0 1px 1px var(--glass-border), 0 12px 30px rgba(0,0,0,0.1);
+  margin-bottom: 40px; cursor: pointer; outline: none;
+}
+.pill-btn:hover { transform: translateY(-3px) scale(1.02); border-color: var(--accent); }
+
+.icon-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.icon-row a {
+  width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+}
+.icon-row a:hover { transform: translateY(-4px); border-color: var(--accent); }
+.icon-row svg { width: 19px; height: 19px; fill: var(--ink); }
+
+/* ============================================================
+   CARDS (LIQUID GLASS PANELS)
+   ============================================================ */
+section.panel { padding: 20px 0 40px; }
+.card {
+  background: var(--glass); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(28px) saturate(190%); -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border-radius: 22px; padding: 32px 28px; margin-bottom: 20px;
+  box-shadow: inset 0 1px 1px var(--glass-border), 0 18px 40px rgba(0, 0, 0, 0.08);
+}
+.card:hover { border-color: var(--accent); }
+
+h2 { font-size: 13px; letter-spacing: .08em; color: var(--muted); font-weight: 600; margin: 0 0 20px; text-transform: uppercase; }
+h2 b { color: var(--ink); font-weight: 700; font-size: 16px; }
+
+.goal p { margin: 0 0 14px; font-size: 15.5px; }
+.goal strong { color: var(--accent); font-weight: 600; }
+
+.entry { display: flex; gap: 24px; }
+.entry + .entry { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); }
+.entry .when { flex: 0 0 108px; color: var(--muted); font-size: 13.5px; }
+.entry .what h3 { margin: 0 0 2px; font-size: 17px; font-weight: 600; }
+.entry .what .sub { color: var(--accent); font-size: 14px; margin-bottom: 8px; }
+.entry ul { margin: 8px 0 0; padding-left: 18px; font-size: 14.5px; }
+
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.stack span {
+  font-size: 12px; color: var(--ink); background: var(--glass);
+  border: 1px solid var(--glass-border); padding: 4px 12px; border-radius: 100px;
+}
+
+.skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 20px; }
+.skill-grid h4 { margin: 0 0 6px; font-size: 14px; color: var(--gold); }
+
+.soft-hobby { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.soft-hobby h4 { margin: 0 0 8px; font-size: 14px; color: var(--gold); }
+.soft-hobby ul { margin: 0; padding-left: 18px; font-size: 14.5px; }
+
+footer { padding: 10px 0 60px; }
+footer .card { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
+footer p { margin: 0; color: var(--muted); font-size: 13.5px; }
+
+footer a, footer a:visited, footer a:active {
+  color: var(--ink) !important; font-weight: 600; text-decoration: none;
+}
+footer a:hover { color: var(--accent) !important; text-decoration: underline; }
+
+/* ============================================================
+   CHAT WIDGET & CHAT MESSAGES ALIGNMENT
+   ============================================================ */
+.chat-toggle {
+  position: fixed; right: 22px; bottom: 22px; z-index: 99;
+  width: 52px; height: 52px; border-radius: 50%;
+  border: 1px solid var(--glass-border); color: #0d1210; background: var(--accent);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.25);
+}
+.chat-toggle svg { width: 24px; height: 24px; stroke: #0d1210; }
+
+.chat-panel {
+  position: fixed; right: 22px; bottom: 84px; z-index: 99;
+  width: min(380px, calc(100vw - 32px)); height: min(500px, calc(100dvh - 110px));
+  display: flex; flex-direction: column;
+  border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden;
+  color: var(--ink); background: var(--chat-bg);
+  backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+}
+.chat-panel[hidden] { display: none !important; }
+
+.chat-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.chat-head button { border: 0; background: none; color: var(--ink); font-size: 24px; cursor: pointer; }
+
+/* CONTAINER BẮT BUỘC DÙNG FLEX-COLUMN ĐỂ BÓNG BÓNG THOẠI CĂN TRÁI/PHẢI CÓ TÁC DỤNG */
+.chat-messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px;
+}
+
+.chat-form { padding: 12px; border-top: 1px solid var(--line); display: grid; gap: 8px; }
+.chat-form input {
+  width: 100%; padding: 10px 14px; border: 1px solid var(--glass-border); border-radius: 10px;
+  color: var(--ink); background: var(--glass); font-size: 16px !important; outline: none;
+}
+.chat-form button {
+  justify-self: end; padding: 9px 20px; border: 0; border-radius: 10px;
+  color: #0d1210; background: var(--accent); font-weight: 700; cursor: pointer;
+}
+.chat-status { min-height: 16px; color: var(--gold); font-size: 12px; }
+.chat-empty { margin: auto; color: var(--muted); font-size: 13.5px; }
+
+/* CẤU TRÚC TIN NHẮN CHUNG */
+.chat-msg {
+  max-width: 82%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-msg .who {
+  font-size: 11px;
+  margin-bottom: 3px;
+  color: var(--muted);
+}
+
+.chat-msg .bubble {
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+/* 1. TIN NHẮN DO BẠN (KHÁCH) GỬI -> NẰM BÊN PHẢI (.from-me) */
+.chat-msg.from-me {
+  align-self: flex-end !important;
+  margin-left: auto;
+  text-align: right;
+}
+
+.chat-msg.from-me .who {
+  color: var(--accent);
+}
+
+.chat-msg.from-me .bubble {
+  background: rgba(142, 224, 183, 0.25) !important;
+  border: 1px solid var(--accent) !important;
+  color: var(--ink);
+  border-bottom-right-radius: 2px;
+  text-align: left;
+}
+
+/* 2. TIN NHẮN TỪ ADMIN HOÀNG TRUNG HẢI -> NẰM BÊN TRÁI (.from-other HOẶC .from-owner) */
+.chat-msg.from-other, .chat-msg.from-owner {
+  align-self: flex-start !important;
+  margin-right: auto;
+  text-align: left;
+}
+
+.chat-msg.from-other .who, .chat-msg.from-owner .who {
+  color: var(--gold);
+}
+
+.chat-msg.from-other .bubble, .chat-msg.from-owner .bubble {
+  background: var(--glass-strong) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: var(--ink);
+  border-bottom-left-radius: 2px;
+  text-align: left;
+}
+
+.chat-notification-btn {
+  align-self: flex-start;
+  max-width: 100%;
+  margin-top: 2px;
+  padding: 8px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  color: #0d1210;
+  background: var(--accent);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.chat-notification-btn:disabled { opacity: .65; cursor: wait; }
+.chat-notification-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* RESPONSIVE MOBILE */
+@media (max-width: 560px) {
+  .theme-toggle { top: 14px; right: 14px; }
+  .chat-toggle { right: 16px; bottom: 16px; width: 48px; height: 48px; }
+  .chat-panel { right: 10px; left: 10px; bottom: 74px; width: auto; height: min(480px, calc(100dvh - 90px)); border-radius: 18px; }
+  .wrap { padding: 0 16px 20px; }
+  .hero { padding: 60px 16px 30px; }
+  .card { padding: 24px 18px; border-radius: 18px; }
+  .entry { flex-direction: column; gap: 4px; }
+  .soft-hobby { grid-template-columns: 1fr; gap: 20px; }
+}
+.msg-status {
+  font-size: 10px;
+  color: var(--muted, #94a39b);
+  margin-top: 2px;
+  opacity: 0.8;
+}
+
+/* Tin nhắn của bản thân -> Trạng thái căn lề phải */
+.chat-msg.from-me .msg-status,
+.chat-msg.from-owner .msg-status {
+  text-align: right;
+}
+
+/* Tin nhắn từ người khác -> Trạng thái căn lề trái */
+.chat-msg.from-other .msg-status,
+.chat-msg.from-visitor .msg-status {
+  text-align: left;
+}

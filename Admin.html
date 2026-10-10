@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hộp thư — Quản trị</title>
+<link rel="stylesheet" href="style/style.css">
+<link rel="stylesheet" href="style/Admin.css">
+</head>
+<body>
+<div class="field"><div class="blob3"></div></div>
+<div class="admin-wrap">
+
+  <div id="login-view">
+    <div class="login-brand" aria-hidden="true">HTH</div>
+    <p class="login-eyebrow">Khu vực quản trị</p>
+    <h1 class="admin-title">Chào mừng trở lại</h1>
+    <p class="login-intro">Đăng nhập để tiếp tục quản lý hộp thư khách.</p>
+    <div class="card login-card">
+      <form id="login-form">
+        <div class="login-field">
+          <label for="login-email">Email quản trị</label>
+          <input id="login-email" type="email" placeholder="admin@example.com" autocomplete="username" required>
+        </div>
+        <div class="login-field">
+          <label for="login-pass">Mật khẩu</label>
+          <div class="password-input-wrap">
+            <input id="login-pass" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password" required>
+            <button id="toggle-password" class="password-toggle" type="button" aria-controls="login-pass" aria-label="Hiện mật khẩu" title="Hiện mật khẩu" aria-pressed="false">
+              <svg class="eye-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <svg class="eye-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="m3 3 18 18"></path></svg>
+            </button>
+          </div>
+        </div>
+        <button id="login-btn" type="submit">
+          <span>Đăng nhập</span>
+          <span class="login-arrow" aria-hidden="true">→</span>
+        </button>
+        <div id="login-error" role="alert"></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="inbox-view">
+    <div style="flex:1; display:flex; flex-direction:column;">
+      <div class="top-row">
+        <h1 class="admin-title" style="margin:0;">Hộp thư khách</h1>
+        <button id="logout-btn">Đăng xuất</button>
+      </div>
+      <div class="inbox-layout">
+        <div class="thread-column">
+          <input id="thread-search" class="thread-search" type="search" placeholder="Tìm khách hoặc tin nhắn..." aria-label="Tìm khách hoặc tin nhắn">
+          <div class="thread-list" id="thread-list">
+            <div class="thread-empty">Đang tải...</div>
+          </div>
+        </div>
+        <div class="conv">
+          <div class="conv-head" id="conv-head">Chọn một khách để xem hội thoại</div>
+          <div class="conv-messages" id="conv-messages"></div>
+          <div class="conv-status" id="conv-status" role="status" aria-live="polite"></div>
+          <form class="conv-form" id="conv-form" style="display:none;">
+            <input id="conv-text" type="text" placeholder="Nhập trả lời..." maxlength="500" required>
+            <button type="submit">Gửi</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="functions/firebase-config.js"></script>
+<script src="functions/Admin.js"></script>
+</body>
+</html>

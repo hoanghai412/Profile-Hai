@@ -1,0 +1,366 @@
+body{ overflow-y:auto; min-height:100vh; min-height:100dvh; }
+.field{ opacity:.72; }
+.admin-wrap{
+  max-width:960px; margin:0 auto; padding:32px 24px 56px; min-height:100vh; min-height:100dvh;
+  display:flex; flex-direction:column;
+}
+.admin-title{ font-size:26px; font-weight:800; margin:0 0 28px; }
+
+#login-view{ width:min(100%,420px); margin:auto; padding:42px 0 32px; text-align:center; }
+.login-brand{
+  width:54px; height:54px; margin:0 auto 22px; display:grid; place-items:center;
+  border:1px solid rgba(159,216,189,.4); border-radius:16px;
+  color:var(--accent); background:rgba(159,216,189,.09); font-size:16px; font-weight:800;
+}
+.login-eyebrow{ margin:0 0 8px; color:var(--accent); font-size:11px; font-weight:700; text-transform:uppercase; }
+#login-view .login-card{ padding:26px; border-radius:14px; text-align:left; background:rgba(13,18,16,.72); border: 1px solid var(--glass-border); }
+#login-form{ display:flex; flex-direction:column; gap:17px; }
+.login-field{ display:grid; gap:7px; }
+#login-view input{
+  width:100%; min-height:46px; padding:11px 13px; border-radius:8px; font-size:14px;
+  background:rgba(255,255,255,.045); border:1px solid var(--glass-border); color:var(--ink); outline:none;
+}
+#login-view .password-input-wrap{ position:relative; }
+#login-view .password-input-wrap input{ padding-right:64px; }
+#login-view .password-toggle{
+  position:absolute; top:50%; right:6px; min-height:0; display:inline-flex; align-items:center; justify-content:center;
+  width:36px; height:36px; padding:8px; border:0; border-radius:6px; color:var(--muted); background:transparent;
+  transform:translateY(-50%); cursor:pointer;
+}
+#login-view .password-toggle svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+#login-view .password-toggle .eye-off{ display:none; }
+#login-view .password-toggle[aria-pressed="true"] .eye-on{ display:none; }
+#login-view .password-toggle[aria-pressed="true"] .eye-off{ display:block; }
+#login-view .password-toggle:hover{ color:var(--accent); background:var(--glass); }
+#login-view .password-toggle:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+#login-view button{
+  min-height:46px; display:flex; align-items:center; justify-content:space-between;
+  padding:0 15px; border-radius:8px; font-weight:700; cursor:pointer; color:#0d1210; background:var(--accent); border:none;
+}
+#login-error{ color:#ff9c9c; font-size:12.5px; }
+
+#inbox-view{ display:none; flex:1; gap:22px; }
+.top-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.inbox-layout{ display:flex; gap:18px; flex:1; min-height:0; }
+.thread-list{
+  width:270px; flex:0 0 270px; overflow-y:auto; border:1px solid var(--glass-border);
+  border-radius:12px; background:rgba(8,13,11,.58);
+}
+.thread-item{ padding:14px 15px; border-bottom:1px solid var(--line); cursor:pointer; }
+.thread-item.active{ border-left:3px solid var(--accent); background:rgba(159,216,189,.09); }
+.thread-item .t-name{ font-size:14.5px; font-weight:600; }
+.thread-item .t-preview{ font-size:12.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.conv{ flex:1; display:flex; flex-direction:column; border:1px solid var(--glass-border); border-radius:12px; background:rgba(8,13,11,.48); overflow:hidden; }
+.conv-head{ padding:15px 18px; border-bottom:1px solid var(--line); font-weight:600; }
+.conv-messages{ flex:1; overflow-y:auto; padding:18px; display:flex; flex-direction:column; gap:12px; }
+.conv-form{ padding:12px; border-top:1px solid var(--line); display:flex; gap:8px; }
+.conv-form input{ flex:1; padding:10px 13px; border-radius:8px; background:var(--glass); border:1px solid var(--glass-border); color:var(--ink); font-size:14px; }
+.conv-form button{ padding:0 17px; border-radius:8px; font-weight:700; background:var(--accent); color:#0d1210; border:none; cursor:pointer; }
+
+#logout-btn{ background:none; border:1px solid var(--glass-border); color:var(--muted); padding:8px 16px; border-radius:10px; cursor:pointer; }
+
+@media (max-width:720px){
+  .inbox-layout{ flex-direction:column; }
+  .thread-list{ width:100%; max-height:160px; }
+}
+/* Khung chứa tin nhắn bắt buộc phải dùng Flex Column */
+#admin-messages, #chat-messages, .chat-messages {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+/* Cấu trúc bong bóng tin nhắn */
+.chat-msg {
+  max-width: 80%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 1. TIN NHẮN TỪ KHÁCH -> BÊN TRÁI */
+.chat-msg.from-other {
+  align-self: flex-start !important;
+  margin-right: auto;
+  text-align: left;
+}
+
+.chat-msg.from-other .who {
+  color: #94a39b;
+}
+
+.chat-msg.from-other .bubble {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #f0f4f2;
+  border-radius: 12px 12px 12px 2px;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+/* 2. TIN NHẮN DO ADMIN NHẮN ("BẠN") -> BÊN PHẢI */
+.chat-msg.from-me {
+  align-self: flex-end !important;
+  margin-left: auto;
+  text-align: right;
+}
+
+.chat-msg.from-me .who {
+  color: #f0c377; /* Màu vàng kim cho Admin */
+}
+
+.chat-msg.from-me .bubble {
+  background: rgba(142, 224, 183, 0.25) !important;
+  border: 1px solid #8ee0b7 !important;
+  color: #f0f4f2;
+  border-radius: 12px 12px 2px 12px;
+  padding: 8px 12px;
+  text-align: left; /* Giữ chữ căn trái trong khung thoại */
+}
+/* BẮT BUỘC KHUNG CHỨA PHẢI CÓ FLEX-COLUMN ĐỂ BÓNG BÓNG CĂN PHẢI ĐƯỢC */
+#conv-messages, .conv-messages {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.chat-msg {
+  max-width: 80%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 1. TIN NHẮN TỪ KHÁCH (from-visitor) -> NẰM BÊN TRÁI */
+.chat-msg.from-visitor {
+  align-self: flex-start !important;
+  margin-right: auto;
+  text-align: left;
+}
+
+.chat-msg.from-visitor .who {
+  color: #94a39b;
+  font-size: 11px;
+}
+
+.chat-msg.from-visitor .bubble {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #f0f4f2;
+  border-radius: 12px 12px 12px 2px;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+/* 2. TIN NHẮN TỪ ADMIN (from-owner - BẠN) -> NẰM BÊN PHẢI */
+.chat-msg.from-owner {
+  align-self: flex-end !important;
+  margin-left: auto;
+  text-align: right;
+}
+
+.chat-msg.from-owner .who {
+  color: #f0c377; /* Màu vàng kim */
+  font-size: 11px;
+}
+
+.chat-msg.from-owner .bubble {
+  background: rgba(142, 224, 183, 0.25) !important;
+  border: 1px solid #8ee0b7 !important;
+  color: #f0f4f2;
+  border-radius: 12px 12px 2px 12px;
+  padding: 8px 12px;
+  text-align: left; /* Chữ trong khung thoại vẫn căn trái cho dễ đọc */
+}
+/* 1. KHÓA MÀN HÌNH CHÍNH KHÔNG CHO CUỘN CẢ TRANG */
+html, body {
+  height: 100vh;
+  margin: 0;
+  overflow: hidden; /* Cấm cuộn thanh cuộn của toàn bộ trình duyệt */
+}
+
+/* 2. CẤU TRÚC KHUNG CHÍNH (INBOX VIEW) */
+#inbox-view {
+  display: flex;
+  height: 100vh;
+  max-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  gap: 20px;
+}
+
+/* 3. CỘT BÊN TRÁI: DANH SÁCH KHÁCH HÀNG (THREAD LIST) */
+#thread-list {
+  flex: 0 0 280px;
+  height: 100%;
+  overflow-y: auto; /* Cho phép cuộn danh sách khách */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 4. CỘT BÊN PHẢI: KHUNG TRO TRUYỆN (CONVERSATION PANEL) */
+.conv-panel, #conv-panel {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* BẮT BUỘC: Ngăn Flexbox đẩy phình chiều cao */
+  overflow: hidden;
+}
+
+/* 5. KHUNG CHỨA TIN NHẮN (BẮT BUỘC CÓ CUỘN RIÊNG) */
+#conv-messages, .conv-messages {
+  flex: 1;
+  min-height: 0; /* BẮT BUỘC: Giúp flex item thu nhỏ và hiện scrollbar */
+  overflow-y: auto !important; /* Bật thanh cuộn dọc cho tin nhắn */
+  padding: 16px;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px;
+}
+
+/* 6. THANH TÙY CHỈNH SCROLLBAR ĐẸP / KÍNH MỜ (TÙY CHỌN) */
+#conv-messages::-webkit-scrollbar,
+#thread-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#conv-messages::-webkit-scrollbar-track,
+#thread-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+#conv-messages::-webkit-scrollbar-thumb,
+#thread-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+#conv-messages::-webkit-scrollbar-thumb:hover,
+#thread-list::-webkit-scrollbar-thumb:hover {
+  background: var(--accent, #8ee0b7);
+}
+/* 1. KHUNG CHỨA BẮT BUỘC KHÔNG ĐƯỢC ĐẶT align-items: center */
+#conv-messages, .conv-messages {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important; /* Mở rộng toàn bộ chiều rộng khung */
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 16px;
+  overflow-y: auto !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 2. ĐỊNH DẠNG CHUNG CHO MỖI DÒNG TIN NHẮN */
+.chat-msg {
+  max-width: 75%; /* Giới hạn độ rộng bong bóng tin nhắn */
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
+/* 3. TIN NHẮN KHÁCH (from-visitor) -> ÉP SÁT LỀ TRÁI */
+.chat-msg.from-visitor {
+  align-self: flex-start !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+  text-align: left;
+}
+
+/* 4. TIN NHẮN ADMIN (from-owner - BẠN) -> ÉP SÁT LỀ PHẢI */
+.chat-msg.from-owner {
+  align-self: flex-end !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  text-align: right;
+}
+
+/* Tối ưu phần chữ và bong bóng thoại Admin */
+.chat-msg.from-owner .who {
+  color: #f0c377;
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.chat-msg.from-owner .bubble {
+  background: rgba(142, 224, 183, 0.25) !important;
+  border: 1px solid #8ee0b7 !important;
+  color: #f0f4f2;
+  border-radius: 12px 12px 2px 12px;
+  padding: 8px 12px;
+  text-align: left; /* Chữ bên trong khung vẫn giữ căn trái dễ đọc */
+}
+.msg-status {
+  font-size: 10px;
+  color: var(--muted, #94a39b);
+  margin-top: 2px;
+  opacity: 0.8;
+}
+
+/* Tin nhắn của bản thân -> Trạng thái căn lề phải */
+.chat-msg.from-me .msg-status,
+.chat-msg.from-owner .msg-status {
+  text-align: right;
+}
+
+/* Tin nhắn từ người khác -> Trạng thái căn lề trái */
+.chat-msg.from-other .msg-status,
+.chat-msg.from-visitor .msg-status {
+  text-align: left;
+}
+
+.thread-column {
+  flex: 0 0 280px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.thread-search {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--glass);
+  font: inherit;
+  font-size: 13px;
+}
+
+.thread-search:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+#thread-list {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.thread-summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.thread-summary .t-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.thread-unread {
+  flex: 0 0 auto;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: #0d1210;
+  background: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+@media (max-width: 720px) {
+  .thread-column { width: 100%; flex: 0 0 auto; }
+  #thread-list { max-height: 160px; flex: 0 1 auto; }
+}

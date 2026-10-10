@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hoàng Trung Hải — Portfolio</title>
+<link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+<link rel="stylesheet" href="style/style.css">
+<script src="functions/script.js"></script>
+</head>
+<body>
+
+<!-- NÚT CHUYỂN ĐỔI CHẾ ĐỘ SÁNG / TỐI -->
+<label class="theme-toggle" title="Đổi chế độ Sáng/Tối">
+  <input type="checkbox" id="theme-switch">
+  <span class="track">
+    <span class="knob"></span>
+  </span>
+  <span class="theme-label">Giao diện</span>
+</label>
+
+<div class="site-loader" aria-live="polite" aria-label="Đang tải trang">
+  <div class="loader-ring"></div>
+  <span>Loading...</span>
+</div>
+
+<div class="field"><div class="blob3"></div></div>
+
+<div class="hero">
+ <div class="hero-inner" id="hero-inner">
+  <p class="eyebrow">Hồ sơ cá nhân</p>
+  <h1>Hoàng Trung Hải</h1>
+  <p class="role">Phát triển phần mềm</p>
+  <button class="pill-btn" id="profile-toggle" type="button" aria-expanded="false" aria-controls="profile-content">Xem hồ sơ</button>
+  <div class="icon-row">
+    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=haihttv00313@gmail.com" target="_blank" aria-label="Email">
+      <svg viewBox="0 0 24 24"><path d="M2 5.5C2 4.67 2.67 4 3.5 4h17c.83 0 1.5.67 1.5 1.5v13c0 .83-.67 1.5-1.5 1.5h-17C2.67 20 2 19.33 2 18.5v-13zm2.2.5l7.8 5.8L19.8 6H4.2zM4 8.3V18h16V8.3l-8 6-8-6z"/></svg>
+    </a>
+    <a href="tel:+84325734524" aria-label="Số điện thoại" title="0325 734 524">
+      <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.7 3.6 4.9 6.3 6.3l2.1-2.1c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.6c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.4 0 .8-.3 1L6.6 10.8z"/></svg>
+    </a>
+    <a href="https://facebook.com/hoang.trung.hai.412208" target="_blank" rel="noopener" aria-label="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.08 5.66 21.23 10.44 22v-7.03H7.9v-2.91h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22C18.34 21.23 22 17.08 22 12.06z"/></svg>
+    </a>
+    <a href="https://github.com/hoanghai412" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.58 2 12.2c0 4.5 2.87 8.32 6.84 9.67.5.1.68-.22.68-.49 0-.24-.01-1.02-.01-1.85-2.78.6-3.37-1.2-3.37-1.2-.45-1.18-1.11-1.49-1.11-1.49-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.9 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.35 4.8-4.58 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.2 10.2 0 0 0 22 12.2C22 6.58 17.52 2 12 2z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/trunq.hai.412/" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24"><path d="M12 2.2c2.67 0 3 .01 4.05.06 1.05.05 1.77.22 2.4.46.65.25 1.2.6 1.74 1.14.54.54.89 1.09 1.14 1.74.24.63.41 1.35.46 2.4.05 1.05.06 1.38.06 4.05s-.01 3-.06 4.05c-.05 1.05-.22 1.77-.46 2.4a4.7 4.7 0 0 1-1.14 1.74 4.7 4.7 0 0 1-1.74 1.14c-.63.24-1.35.41-2.4.46-1.05.05-1.38.06-4.05.06s-3-.01-4.05-.06c-1.05-.05-1.77-.22-2.4-.46a4.7 4.7 0 0 1-1.74-1.14 4.7 4.7 0 0 1-1.14-1.74c-.24-.63-.41-1.35-.46-2.4C2.2 15 2.2 14.67 2.2 12s.01-3 .06-4.05c.05-1.05.22-1.77.46-2.4.25-.65.6-1.2 1.14-1.74A4.7 4.7 0 0 1 5.6 2.67c.63-.24 1.35-.41 2.4-.46C8.99 2.2 9.33 2.2 12 2.2zm0 1.8c-2.62 0-2.93.01-3.96.06-.86.04-1.32.18-1.63.3-.41.16-.7.35-1.01.66-.31.31-.5.6-.66 1.01-.12.31-.26.77-.3 1.63C4.4 8.7 4.4 9 4.4 12s0 3.3.04 4.34c.04.86.18 1.32.3 1.63.16.41.35.7.66 1.01.31.31.6.5 1.01.66.31.12.77.26 1.63.3 1.03.05 1.34.06 3.96.06s2.93-.01 3.96-.06c.86-.04 1.32-.18 1.63-.3.41-.16.7-.35 1.01-.66.31-.31.5-.6.66-1.01.12-.31.26-.77.3-1.63.05-1.03.06-1.34.06-4.34s0-3.3-.06-4.34c-.04-.86-.18-1.32-.3-1.63-.16-.41-.35-.7-.66-1.01a2.9 2.9 0 0 0-1.01-.66c-.31-.12-.77-.26-1.63-.3C14.93 4.01 14.62 4 12 4zm0 3.4a4.6 4.6 0 1 1 0 9.2 4.6 4.6 0 0 1 0-9.2zm0 1.8a2.8 2.8 0 1 0 0 5.6 2.8 2.8 0 0 0 0-5.6zm4.8-2a1.08 1.08 0 1 1 0 2.16 1.08 1.08 0 0 1 0-2.16z"/></svg>
+    </a>
+  </div>
+ </div>
+</div>
+
+<div class="wrap profile-content" id="profile-content" inert>
+  <section class="panel reveal" id="goal">
+    <div class="card goal">
+      <h2><b>Mục tiêu nghề nghiệp</b></h2>
+      <p><strong>Ngắn hạn</strong> — Mong muốn được làm việc trong môi trường chuyên nghiệp để áp dụng kiến thức lập trình Frontend/Backend/Full-Stack vào các dự án thực tế, đồng thời nâng cao kỹ năng xây dựng và phát triển phần mềm.</p>
+      <p><strong>Dài hạn</strong> — Trở thành một Software Developer chuyên nghiệp, có khả năng phát triển các hệ thống web ổn định, bảo mật và hiệu quả; không ngừng học hỏi công nghệ mới để đóng góp vào sự phát triển của doanh nghiệp.</p>
+    </div>
+  </section>
+
+  <section class="panel reveal">
+    <div class="card">
+      <h2><b>Học vấn</b></h2>
+      <div class="entry">
+        <div class="when">2023 – 9/2026</div>
+        <div class="what">
+          <h3>FPT Polytechnic</h3>
+          <div class="sub">Phát triển phần mềm</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel reveal">
+    <div class="card">
+      <h2><b>Kinh nghiệm làm việc</b></h2>
+      <div class="entry">
+        <div class="when">5/2025 – 7/2026</div>
+        <div class="what">
+          <h3>Công nghệ viễn thông tin học Sun Việt</h3>
+          <div class="sub">Intern Business Analyst</div>
+          <ul>
+            <li>Phân tích & thu thập yêu cầu nghiệp vụ từ khách hàng/stakeholders, chuẩn hóa thành tài liệu chi tiết</li>
+            <li>Xây dựng tài liệu đặc tả SRS/BRD và chi tiết hóa luồng nghiệp vụ cho team Dev</li>
+            <li>Mô hình hóa hệ thống bằng biểu đồ UML (Use Case, Activity, Sequence)</li>
+            <li>Xây dựng Test Case cơ bản, hỗ trợ nghiệm thu chức năng, phối hợp cùng Dev & Tester</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel reveal">
+    <div class="card">
+      <h2><b>Dự án</b></h2>
+      <div class="entry">
+        <div class="when">2025 – 2026</div>
+        <div class="what">
+          <h3>Poly Coffee</h3>
+          <div class="sub">Back-end</div>
+          <p>Hệ thống quản lý quán coffee: quản lý sản phẩm, bàn, hóa đơn và dữ liệu cửa hàng; thiết kế & xử lý API phục vụ hoạt động hệ thống; chấm công ra vào bằng nhận diện khuôn mặt.</p>
+          <div class="stack"><span>Java</span><span>API</span><span>.NET</span><span>MVC</span></div>
+        </div>
+      </div>
+      <div class="entry">
+        <div class="when">1/2026 – 9/2026</div>
+        <div class="what">
+          <h3>Hotel Booking & Management System</h3>
+          <div class="sub">Full-Stack</div>
+          <p style="margin-bottom:8px;">Hệ thống đặt phòng và quản lý khách sạn đa chi nhánh (Multi-Hotel).</p>
+          <ul>
+            <li>Tìm kiếm, lọc phòng theo loại, giá, tiện nghi; đặt phòng online, tra cứu bằng mã booking</li>
+            <li>Quản lý nhiều chi nhánh, phòng và đơn đặt phòng; dashboard doanh thu & tỷ lệ lấp đầy</li>
+            <li>Quản lý quy trình Check-in, Check-out, No-show; mã giảm giá & khuyến mãi</li>
+            <li>Phân quyền người dùng với Spring Security (Admin, Staff, Promotion Manager)</li>
+          </ul>
+          <div class="stack"><span>Java 17</span><span>Spring Boot</span><span>Spring Data JPA</span><span>Spring Security</span><span>PostgreSQL</span><span>Thymeleaf</span><span>REST API</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel reveal">
+    <div class="card">
+      <h2><b>Kỹ năng chuyên môn</b></h2>
+      <div class="skill-grid">
+        <div><h4>Ngôn ngữ lập trình</h4><p>Java, C/C++, JavaScript</p></div>
+        <div><h4>Backend</h4><p>Spring Boot, REST API, lập trình hướng đối tượng (OOP)</p></div>
+        <div><h4>Cơ sở dữ liệu</h4><p>SQL, SQL Server, MySQL</p></div>
+        <div><h4>Frontend</h4><p>HTML, CSS, JavaScript</p></div>
+        <div><h4>Công cụ</h4><p>Git / GitHub</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel reveal">
+    <div class="card soft-hobby">
+      <div>
+        <h4>Kỹ năng mềm</h4>
+        <ul>
+          <li>Giao tiếp & làm việc nhóm</li>
+          <li>Giải quyết vấn đề</li>
+          <li>Quản lý thời gian</li>
+          <li>Tin học văn phòng</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Sở thích</h4>
+        <ul>
+          <li>Đọc sách về phát triển bản thân</li>
+          <li>Tìm hiểu thuật toán & công nghệ mới</li>
+          <li>Đi du lịch khám phá</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer class="reveal">
+    <div class="card">
+      <p>Liên hệ</p>
+      <a href="mailto:haihttv00313@gmail.com">haihttv00313@gmail.com</a>
+    </div>
+  </footer>
+</div>
+
+<button class="chat-toggle" id="chat-toggle" type="button" aria-expanded="false" aria-controls="chat-panel" title="Trò chuyện">
+  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+  </svg>
+</button>
+
+<section class="chat-panel" id="chat-panel" aria-label="Trò chuyện" hidden>
+  <div class="chat-head"><strong>Trò chuyện</strong><button id="chat-close" type="button" aria-label="Đóng">×</button></div>
+  <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
+  <form class="chat-form" id="chat-form">
+    <input id="chat-name" type="text" maxlength="80" placeholder="Tên của bạn" autocomplete="name" required>
+    <input id="chat-text" type="text" maxlength="500" placeholder="Nhập tin nhắn..." required>
+    <div class="chat-status" id="chat-status" role="status" aria-live="polite"></div>
+    <button type="submit">Gửi</button>
+  </form>
+</section>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
+<script src="functions/firebase-config.js"></script>
+<script src="functions/chat.js"></script>
+
+</body>
+</html>

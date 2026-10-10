@@ -1,0 +1,28 @@
+{
+  "rules": {
+    "threads": {
+      ".read": "auth != null && auth.token.email === 'haihttv00313@gmail.com'",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'haihttv00313@gmail.com')",
+        "pushToken": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.isString() && newData.val().length <= 4096"
+        },
+        "meta": {
+          ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'haihttv00313@gmail.com')"
+        },
+        "messages": {
+          "$messageId": {
+            ".write": "auth != null && ((!data.exists() && ((auth.uid === $uid && newData.child('from').val() === 'visitor' && (!newData.child('seen').exists() || newData.child('seen').val() === false)) || (auth.token.email === 'haihttv00313@gmail.com' && newData.child('from').val() === 'owner' && (!newData.child('seen').exists() || newData.child('seen').val() === false)))) || (data.exists() && newData.child('from').val() === data.child('from').val() && newData.child('text').val() === data.child('text').val() && newData.child('time').val() === data.child('time').val() && newData.child('name').val() === data.child('name').val() && newData.child('seen').val() === true && ((!data.child('seen').val() && auth.uid === $uid && data.child('from').val() === 'owner') || (!data.child('seen').val() && auth.token.email === 'haihttv00313@gmail.com' && data.child('from').val() === 'visitor'))))",
+            ".validate": "newData.hasChildren(['from', 'text', 'time']) && (newData.child('from').val() === 'visitor' || newData.child('from').val() === 'owner') && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 500 && newData.child('time').isNumber()",
+            "from": { ".validate": "newData.isString()" },
+            "text": { ".validate": "newData.isString()" },
+            "time": { ".validate": "newData.isNumber()" },
+            "name": { ".validate": "newData.isString() && newData.val().length <= 80" },
+            "seen": { ".validate": "newData.isBoolean()" }
+          }
+        }
+      }
+    }
+  }
+}

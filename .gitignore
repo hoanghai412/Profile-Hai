@@ -1,0 +1,11 @@
+node_modules/
+functions/node_modules/
+.firebase/
+.env
+.env.*
+.secret.local
+.runtimeconfig.json
+functions/resend-config.js
+*.log
+.DS_Store
+Thumbs.db
