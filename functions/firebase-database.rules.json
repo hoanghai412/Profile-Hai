@@ -4,10 +4,6 @@
       ".read": "auth != null && auth.token.email === 'haihttv00313@gmail.com'",
       "$uid": {
         ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'haihttv00313@gmail.com')",
-        "pushToken": {
-          ".write": "auth != null && auth.uid === $uid",
-          ".validate": "newData.isString() && newData.val().length <= 4096"
-        },
         "meta": {
           ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'haihttv00313@gmail.com')"
         },

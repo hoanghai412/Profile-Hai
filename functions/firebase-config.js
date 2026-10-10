@@ -7,7 +7,6 @@ scope.firebaseConfig = {
   storageBucket: "tinnhan-454c9.firebasestorage.app",
   messagingSenderId: "349216619870",
   appId: "1:349216619870:web:65e522d7fbaeb1c0a1a3cf",
-  vapidKey: "BBWtWqXPb15Oe4j0lPmO_7EWRoPbP9UZl10thJs-NWQaNM4on_OeuSR_vWosQnepq0tEAB8skKDWNBbuwaUS6-U",
   adminEmail: "haihttv00313@gmail.com"
 };
 

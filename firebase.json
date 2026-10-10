@@ -2,20 +2,6 @@
   "database": {
     "rules": "functions/firebase-database.rules.json"
   },
-  "functions": [
-    {
-      "source": "functions",
-      "codebase": "default",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log",
-        ".firebase",
-        "*.local"
-      ]
-    }
-  ],
   "hosting": {
     "site": "tinnhan-454c9",
     "public": ".",
@@ -25,22 +11,8 @@
       "**/.git/**",
       "**/.*",
       "**/node_modules/**",
-      "functions/index.js",
-      "functions/package.json",
-      "functions/package-lock.json",
       "functions/firebase-database.rules.json",
       "functions/resend-config.js"
-    ],
-    "headers": [
-      {
-        "source": "/functions/firebase-messaging-sw.js",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-cache"
-          }
-        ]
-      }
     ]
   }
 }

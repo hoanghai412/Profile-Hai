@@ -15,11 +15,19 @@
   var textInput = document.getElementById("chat-text");
   var statusEl = document.getElementById("chat-status");
   var pendingMessages = {};
-  var messaging = null;
-  var notificationsEnabled = false;
-  var notificationsOptOutKey = "hh-chat-push-disabled";
 
   if (!toggleBtn || !panel || !closeBtn || !listEl || !form || !nameInput || !textInput) return;
+
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.getRegistrations().then(function (registrations) {
+      registrations.forEach(function (registration) {
+        var worker = registration.active || registration.installing || registration.waiting;
+        if (worker && /\/firebase-messaging-sw\.js$/.test(worker.scriptURL)) {
+          registration.unregister();
+        }
+      });
+    }).catch(function () {});
+  }
 
   try {
     var savedName = localStorage.getItem("hh-chat-name");
@@ -94,127 +102,8 @@
     item.className = "chat-msg from-other auto-welcome";
     item.innerHTML =
       '<div class="who">Tin nhắn tự động</div>' +
-      '<div class="bubble">' + escapeHtml("Chào bạn, cảm ơn bạn đã ghé trang cá nhân của mình. Hãy để lại lời nhắn, mình sẽ phản hồi sớm nhé. Bạn vui lòng bật thông báo để nhận được phản hồi ngay khi mình trả lời nhé.") + '<br><br>' + escapeHtml("Trân trọng!!") + '</div>' +
-      '<button class="chat-notification-btn" id="chat-enable-notifications" type="button">Bật thông báo</button>';
+      '<div class="bubble">' + escapeHtml("Chào bạn, cảm ơn bạn đã ghé trang cá nhân của mình. Hãy để lại lời nhắn, mình sẽ phản hồi sớm nhé.") + '<br><br>' + escapeHtml("Trân trọng!!") + '</div>';
     listEl.appendChild(item);
-    var notificationButton = item.querySelector(".chat-notification-btn");
-    notificationButton.addEventListener("click", toggleNotifications);
-    updateNotificationButton();
-  }
-
-  function updateNotificationButton() {
-    var notificationButton = document.getElementById("chat-enable-notifications");
-    if (!notificationButton) return;
-
-    var label = notificationsEnabled ? "Tắt thông báo" : "Bật thông báo";
-    notificationButton.textContent = label;
-    notificationButton.setAttribute("aria-label", label);
-    notificationButton.setAttribute("aria-pressed", String(notificationsEnabled));
-    notificationButton.title = notificationsEnabled ? "Tắt thông báo trên thiết bị này" : "Nhận thông báo khi có phản hồi";
-  }
-
-  function toggleNotifications() {
-    if (notificationsEnabled) disableNotifications();
-    else enableNotifications();
-  }
-
-  function enableNotifications() {
-    if (!firebaseReady || !firebase.messaging || !window.firebaseConfig.vapidKey) {
-      if (statusEl) statusEl.textContent = "Thông báo chưa được cấu hình. Vui lòng thử lại sau.";
-      return;
-    }
-    if (!window.isSecureContext || !navigator.serviceWorker || !("Notification" in window)) {
-      if (statusEl) statusEl.textContent = "Thông báo cần website HTTPS và trình duyệt hỗ trợ.";
-      return;
-    }
-
-    var notificationButton = document.getElementById("chat-enable-notifications");
-    if (notificationButton) notificationButton.disabled = true;
-    if (statusEl) statusEl.textContent = "Đang bật thông báo...";
-
-    Notification.requestPermission().then(function (permission) {
-      if (permission !== "granted") throw new Error("notification-permission-denied");
-      return Promise.resolve(firebase.messaging.isSupported());
-    }).then(function (supported) {
-      if (!supported) throw new Error("messaging-not-supported");
-      messaging = firebase.messaging();
-      return navigator.serviceWorker.register("./functions/firebase-messaging-sw.js");
-    }).then(function (registration) {
-      return messaging.getToken({
-        vapidKey: window.firebaseConfig.vapidKey,
-        serviceWorkerRegistration: registration
-      });
-    }).then(function (token) {
-      if (!token) throw new Error("messaging-token-unavailable");
-      return getMessagesRef().then(function (messagesRef) {
-        return messagesRef.parent.child("pushToken").set(token);
-      });
-    }).then(function () {
-      try { localStorage.removeItem(notificationsOptOutKey); } catch (e) {}
-      notificationsEnabled = true;
-      updateNotificationButton();
-      if (statusEl) statusEl.textContent = "Đã bật thông báo. Bạn sẽ nhận được tin khi mình phản hồi.";
-    }).catch(function (error) {
-      if (statusEl) {
-        statusEl.textContent = error.message === "notification-permission-denied"
-          ? "Bạn chưa cấp quyền thông báo cho website."
-          : "Chưa bật được thông báo. Hãy thử lại sau.";
-      }
-    }).then(function () {
-      if (notificationButton) notificationButton.disabled = false;
-    });
-  }
-
-  function disableNotifications() {
-    var notificationButton = document.getElementById("chat-enable-notifications");
-    if (notificationButton) notificationButton.disabled = true;
-    if (statusEl) statusEl.textContent = "Đang tắt thông báo...";
-    try { localStorage.setItem(notificationsOptOutKey, "true"); } catch (e) {}
-
-    getMessagesRef().then(function (messagesRef) {
-      return messagesRef.parent.child("pushToken").remove();
-    }).then(function () {
-      notificationsEnabled = false;
-      updateNotificationButton();
-      if (statusEl) statusEl.textContent = "Đã tắt thông báo trên thiết bị này.";
-    }).catch(function () {
-      try { localStorage.removeItem(notificationsOptOutKey); } catch (e) {}
-      if (statusEl) statusEl.textContent = "Chưa tắt được thông báo. Hãy thử lại sau.";
-    }).then(function () {
-      if (notificationButton) notificationButton.disabled = false;
-    });
-  }
-
-  function refreshPushToken() {
-    if (!firebaseReady || !firebase.messaging || !window.firebaseConfig.vapidKey ||
-        !window.isSecureContext || !navigator.serviceWorker || !("Notification" in window) ||
-        Notification.permission !== "granted") return;
-    try {
-      if (localStorage.getItem(notificationsOptOutKey) === "true") return;
-    } catch (e) {}
-
-    Promise.resolve(firebase.messaging.isSupported()).then(function (supported) {
-      if (!supported) return null;
-      messaging = firebase.messaging();
-      return navigator.serviceWorker.register("./functions/firebase-messaging-sw.js");
-    }).then(function (registration) {
-      if (!registration) return null;
-      return messaging.getToken({
-        vapidKey: window.firebaseConfig.vapidKey,
-        serviceWorkerRegistration: registration
-      });
-    }).then(function (token) {
-      if (!token) return false;
-      return getMessagesRef().then(function (messagesRef) {
-        return messagesRef.parent.child("pushToken").set(token).then(function () { return true; });
-      });
-    }).catch(function (error) {
-      console.warn("Could not refresh visitor notification token:", error);
-    }).then(function (enabled) {
-      if (!enabled) return;
-      notificationsEnabled = true;
-      updateNotificationButton();
-    });
   }
 
   function markMessageAsSeen(messageSnap) {
@@ -291,8 +180,6 @@
     });
 
   });
-  refreshPushToken();
-
   toggleBtn.addEventListener("click", function () {
     var isHidden = panel.hasAttribute("hidden");
     if (isHidden) {
