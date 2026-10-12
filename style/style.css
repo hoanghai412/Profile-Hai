@@ -216,6 +216,8 @@ body.is-ready .site-loader { opacity: 0; visibility: hidden; pointer-events: non
 }
 .icon-row a:hover { transform: translateY(-4px); border-color: var(--accent); }
 .icon-row svg { width: 19px; height: 19px; fill: var(--ink); }
+.icon-row a.zalo-link { background: #0068ff; border-color: #0068ff; }
+.icon-row a.zalo-link svg { width: 24px; height: 24px; fill: #fff; }
 
 /* ============================================================
    CARDS (LIQUID GLASS PANELS)
