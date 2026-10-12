@@ -15,6 +15,15 @@
   var textInput = document.getElementById("chat-text");
   var statusEl = document.getElementById("chat-status");
   var pendingMessages = {};
+  var preferredChatLanguage = "vi";
+  var preferredLanguageMessageTime = 0;
+  var latestVisitorLanguageCheckTime = 0;
+
+  try {
+    preferredChatLanguage = localStorage.getItem("hh-chat-reply-language") === "en" ? "en" : "vi";
+    preferredLanguageMessageTime = Number(localStorage.getItem("hh-chat-reply-language-time")) || 0;
+  } catch (e) {}
+  latestVisitorLanguageCheckTime = preferredLanguageMessageTime;
 
   if (!toggleBtn || !panel || !closeBtn || !listEl || !form || !nameInput || !textInput) return;
 
@@ -46,6 +55,40 @@
     return String(date.getHours()).padStart(2, '0') + ":" + String(date.getMinutes()).padStart(2, '0');
   }
 
+  function chatText(vietnamese, english) {
+    return window.appLanguage === "en" ? english : vietnamese;
+  }
+
+  function getReplyLanguage() {
+    if (window.languageManuallySelected) return window.appLanguage === "en" ? "en" : "vi";
+    return preferredChatLanguage;
+  }
+
+  function rememberVisitorLanguage(text, timestamp) {
+    if (!window.detectChatLanguage || !text || timestamp < latestVisitorLanguageCheckTime) return;
+    latestVisitorLanguageCheckTime = timestamp;
+    window.detectChatLanguage(text).then(function (language) {
+      if (!language || timestamp < preferredLanguageMessageTime) return;
+      preferredLanguageMessageTime = timestamp;
+      preferredChatLanguage = language;
+      try {
+        localStorage.setItem("hh-chat-reply-language", language);
+        localStorage.setItem("hh-chat-reply-language-time", String(timestamp));
+      } catch (e) {}
+
+      if (!window.languageManuallySelected) {
+        Array.prototype.forEach.call(listEl.querySelectorAll('.chat-msg[data-from="owner"]'), function (item) {
+          renderMessage({
+            from: item.dataset.from,
+            text: item.dataset.rawText,
+            time: Number(item.dataset.time) || 0,
+            seen: item.dataset.seen === "true"
+          }, item.dataset.key);
+        });
+      }
+    }).catch(function () {});
+  }
+
   // TỰ ĐỘNG ĐÁNH DẤU "ĐÃ XEM" CÁC TIN NHẮN TỪ ADMIN
   function markAdminMessagesAsSeen(messagesRef) {
     messagesRef.once("value", function (snap) {
@@ -74,13 +117,21 @@
     }
 
     item.className = "chat-msg " + (isMe ? "from-me" : "from-other");
+    item.dataset.rawText = msg.text || "";
+    item.dataset.from = msg.from || "visitor";
+    item.dataset.time = String(msg.time || "");
+    item.dataset.seen = String(msg.seen === true);
 
-    var senderName = isMe ? "Bạn" : "Hoàng Trung Hải";
+    var senderName = isMe ? chatText("Bạn", "You") : "Hoàng Trung Hải";
     
     // Hiển thị trạng thái cho tin nhắn Khách gửi
     var statusHtml = "";
     if (isMe) {
-      var statusText = msg.seen ? "Đã xem" : (pendingMessages[key] ? "Đang gửi..." : (msg.failed ? "Gửi thất bại" : "Đã gửi"));
+      var statusText = msg.seen
+        ? chatText("Đã xem", "Seen")
+        : (pendingMessages[key]
+          ? chatText("Đang gửi...", "Sending...")
+          : (msg.failed ? chatText("Gửi thất bại", "Failed to send") : chatText("Đã gửi", "Sent")));
       statusHtml = '<div class="msg-status">' + statusText + '</div>';
     }
 
@@ -89,7 +140,16 @@
       ' <span style="font-size:10px; opacity:0.6;">' + formatTime(msg.time) + '</span></div>' +
       '<div class="bubble">' + escapeHtml(msg.text || "") + '</div>' + statusHtml;
 
+    var bubble = item.querySelector(".bubble");
+    if (window.renderChatTranslation) {
+      window.renderChatTranslation(bubble, msg.text || "", getReplyLanguage(), isOwnerMessage(msg));
+    }
+
     listEl.scrollTop = listEl.scrollHeight;
+  }
+
+  function isOwnerMessage(msg) {
+    return msg.from === "owner" || msg.sender === "Admin";
   }
 
   function renderWelcomeMessage() {
@@ -100,10 +160,14 @@
 
     var item = document.createElement("div");
     item.className = "chat-msg from-other auto-welcome";
+    var greeting = window.appLanguage === "en"
+      ? "Hello! Thanks for visiting my portfolio. Leave me a message and I will get back to you as soon as I can."
+      : "Chào bạn, cảm ơn bạn đã ghé trang cá nhân của mình. Hãy để lại lời nhắn, mình sẽ phản hồi sớm nhé.";
+    var signOff = window.appLanguage === "en" ? "Best regards," : "Trân trọng!!";
     item.innerHTML =
-      '<div class="who">Tin nhắn tự động</div>' +
-      '<div class="bubble">' + escapeHtml("Chào bạn, cảm ơn bạn đã ghé trang cá nhân của mình. Hãy để lại lời nhắn, mình sẽ phản hồi sớm nhé.") + '<br><br>' + escapeHtml("Trân trọng!!") + '</div>';
-    listEl.appendChild(item);
+      '<div class="who">' + escapeHtml(window.appLanguage === "en" ? "Automatic message" : "Tin nhắn tự động") + '</div>' +
+      '<div class="bubble">' + escapeHtml(greeting) + '<br><br>' + escapeHtml(signOff) + '</div>';
+    listEl.insertBefore(item, listEl.firstChild);
   }
 
   function markMessageAsSeen(messageSnap) {
@@ -112,6 +176,24 @@
       messageSnap.ref.update({ seen: true });
     }
   }
+
+  document.addEventListener("app-language-change", function (event) {
+    var language = event.detail && event.detail.language;
+    var welcome = listEl.querySelector(".auto-welcome");
+    if (welcome) {
+      welcome.remove();
+      renderWelcomeMessage();
+    }
+    Array.prototype.forEach.call(listEl.querySelectorAll(".chat-msg[data-key]"), function (item) {
+      renderMessage({
+        from: item.dataset.from,
+        text: item.dataset.rawText,
+        time: Number(item.dataset.time) || 0,
+        seen: item.dataset.seen === "true"
+      }, item.dataset.key);
+    });
+    if (language && statusEl) statusEl.textContent = "";
+  });
 
   function sendVisitorEmailNotice(name, text) {
     var formspreeEndpoint = "https://formspree.io/f/xkjoryer";
@@ -168,7 +250,11 @@
   if (firebaseReady) getMessagesRef().then(function (messagesRef) {
     // LẮNG NGHE TIN NHẮN MỚI
     messagesRef.limitToLast(50).on("child_added", function (snap) {
-      renderMessage(snap.val(), snap.key);
+      var message = snap.val();
+      renderMessage(message, snap.key);
+      if (message && message.from !== "owner") {
+        rememberVisitorLanguage(message.text, Number(message.time) || Date.now());
+      }
       if (!panel.hasAttribute("hidden")) {
         markMessageAsSeen(snap);
       }
@@ -209,7 +295,7 @@
     var text = textInput.value.trim();
     if (!name || !text) return;
     if (!firebaseReady) {
-      if (statusEl) statusEl.textContent = "Chat chưa kết nối. Vui lòng thử lại sau.";
+      if (statusEl) statusEl.textContent = chatText("Chat chưa kết nối. Vui lòng thử lại sau.", "Chat is unavailable right now. Please try again later.");
       return;
     }
 
@@ -218,6 +304,7 @@
 
     try { localStorage.setItem("hh-chat-name", name); } catch (e) {}
     if (statusEl) statusEl.textContent = "";
+    rememberVisitorLanguage(text, Date.now());
 
     var pendingMessage = { from: "visitor", name: name, text: text, time: Date.now(), seen: false };
     var pendingMessageRef = null;
@@ -235,7 +322,7 @@
         delete pendingMessages[pendingMessageRef.key];
         renderMessage(pendingMessage, pendingMessageRef.key);
         return messagesRef.parent.child("meta").update({ name: name, lastText: text, lastTime: timeStamp }).catch(function () {
-          if (statusEl) statusEl.textContent = "Tin đã gửi nhưng chưa cập nhật được hội thoại.";
+          if (statusEl) statusEl.textContent = chatText("Tin đã gửi nhưng chưa cập nhật được hội thoại.", "Message sent, but the conversation preview could not be updated.");
         });
       }).then(function () {
         sendVisitorEmailNotice(name, text);
@@ -247,7 +334,7 @@
         renderMessage(pendingMessage, pendingMessageRef.key);
       }
       if (textInput.value === "") textInput.value = text;
-      if (statusEl) statusEl.textContent = "Gửi tin nhắn chưa thành công.";
+      if (statusEl) statusEl.textContent = chatText("Gửi tin nhắn chưa thành công.", "Your message could not be sent. Please try again.");
     });
   });
 })();

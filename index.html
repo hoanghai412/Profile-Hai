@@ -6,6 +6,7 @@
 <title>Hoàng Trung Hải — Portfolio</title>
 <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
 <link rel="stylesheet" href="style/style.css">
+<script src="functions/i18n.js"></script>
 <script src="functions/script.js"></script>
 </head>
 <body>
@@ -18,6 +19,11 @@
   </span>
   <span class="theme-label">Giao diện</span>
 </label>
+
+<div class="language-toggle" role="group" aria-label="Language">
+  <button type="button" data-language="vi" aria-pressed="true">VI</button>
+  <button type="button" data-language="en" aria-pressed="false">EN</button>
+</div>
 
 <div class="site-loader" aria-live="polite" aria-label="Đang tải trang">
   <div class="loader-ring"></div>
@@ -176,6 +182,7 @@
   <div class="chat-head"><strong>Trò chuyện</strong><button id="chat-close" type="button" aria-label="Đóng">×</button></div>
   <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
   <form class="chat-form" id="chat-form">
+  <p class="translation-disclosure">Tin nhắn có thể được gửi tới MyMemory để dịch.</p>
     <input id="chat-name" type="text" maxlength="80" placeholder="Tên của bạn" autocomplete="name" required>
     <input id="chat-text" type="text" maxlength="500" placeholder="Nhập tin nhắn..." required>
     <div class="chat-status" id="chat-status" role="status" aria-live="polite"></div>
@@ -187,6 +194,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 <script src="functions/firebase-config.js"></script>
+<script src="functions/translate.js"></script>
 <script src="functions/chat.js"></script>
 
 </body>

@@ -254,6 +254,11 @@ function renderMessage(msg, key) {
     ' <span style="font-size:10px; opacity:0.6;">' + formatTime(msg.time) + '</span></div>' +
     '<div class="bubble">' + escapeHtml(msg.text || "") + "</div>" + statusHtml;
 
+  var bubble = item.querySelector(".bubble");
+  if (window.renderChatTranslation) {
+    window.renderChatTranslation(bubble, msg.text || "", "vi", !isOwner);
+  }
+
   convMessages.appendChild(item);
   convMessages.scrollTop = convMessages.scrollHeight;
 }

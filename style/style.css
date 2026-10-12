@@ -104,6 +104,38 @@ html[data-theme="light"] .theme-toggle .knob {
 
 .theme-toggle .theme-label { font-size: 12px; color: var(--muted); font-weight: 600; }
 
+.language-toggle {
+  position: fixed;
+  top: 20px;
+  right: 158px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+.language-toggle button {
+  min-width: 36px;
+  min-height: 30px;
+  padding: 4px 7px;
+  border: 0;
+  border-radius: 5px;
+  color: var(--muted);
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.language-toggle button[aria-pressed="true"] { color: #0d1210; background: var(--accent); }
+.language-toggle button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
 /* ============================================================
    LOADER & PHÔNG NỀN ĐỘNG (LIQUID BLOBS)
    ============================================================ */
@@ -280,6 +312,10 @@ footer a:hover { color: var(--accent) !important; text-decoration: underline; }
 }
 .chat-status { min-height: 16px; color: var(--gold); font-size: 12px; }
 .chat-empty { margin: auto; color: var(--muted); font-size: 13.5px; }
+.translation-disclosure { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 10.5px; line-height: 1.35; }
+.translation-note { display: block; margin-top: 5px; color: var(--muted); font-size: 10px; }
+.translation-original-toggle { margin-left: 6px; padding: 0; border: 0; color: var(--accent); background: transparent; font: inherit; font-size: 10px; text-decoration: underline; cursor: pointer; }
+.translation-original-toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 /* CẤU TRÚC TIN NHẮN CHUNG */
 .chat-msg {
@@ -346,6 +382,7 @@ footer a:hover { color: var(--accent) !important; text-decoration: underline; }
 /* RESPONSIVE MOBILE */
 @media (max-width: 560px) {
   .theme-toggle { top: 14px; right: 14px; }
+  .language-toggle { top: 14px; right: 142px; }
   .chat-toggle { right: 16px; bottom: 16px; width: 48px; height: 48px; }
   .chat-panel { right: 10px; left: 10px; bottom: 74px; width: auto; height: min(480px, calc(100dvh - 90px)); border-radius: 18px; }
   .wrap { padding: 0 16px 20px; }

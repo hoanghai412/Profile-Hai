@@ -39,13 +39,13 @@ document.addEventListener('DOMContentLoaded', function () {
         profileContent.classList.remove('is-open');
         profileContent.setAttribute('inert', '');
         profileToggle.setAttribute('aria-expanded', 'false');
-        profileToggle.textContent = 'Xem hồ sơ';
+        profileToggle.textContent = window.appLanguage === 'en' ? 'View Profile' : 'Xem hồ sơ';
       } else {
         // Mở hồ sơ
         profileContent.classList.add('is-open');
         profileContent.removeAttribute('inert');
         profileToggle.setAttribute('aria-expanded', 'true');
-        profileToggle.textContent = 'Ẩn hồ sơ';
+        profileToggle.textContent = window.appLanguage === 'en' ? 'Hide Profile' : 'Ẩn hồ sơ';
 
         // Cuộn mượt xuống nội dung hồ sơ
         window.setTimeout(function () {
